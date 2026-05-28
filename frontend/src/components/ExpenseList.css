@@ -1,0 +1,233 @@
+/* ===== EXPENSE LIST WRAPPER ===== */
+.expense-list-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ===== FILTER BAR ===== */
+.filter-bar {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.filter-bar-main {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.filter-search {
+  flex: 1;
+  min-width: 200px;
+}
+
+.filter-select {
+  min-width: 160px;
+  width: auto;
+  flex-shrink: 0;
+}
+
+.filter-date {
+  min-width: 140px;
+  width: auto;
+  flex-shrink: 0;
+}
+
+.filter-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.filter-count {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* ===== EMPTY STATE ===== */
+.expense-empty {
+  padding: 60px 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  animation: fadeIn 0.4s ease;
+}
+
+.expense-empty-icon {
+  font-size: 3.5rem;
+  animation: float 3s ease-in-out infinite;
+  filter: drop-shadow(0 4px 12px rgba(108, 99, 255, 0.3));
+}
+
+.expense-empty-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.expense-empty-text {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  max-width: 340px;
+  line-height: 1.6;
+}
+
+/* ===== DESKTOP TABLE ===== */
+.expense-table-wrapper {
+  overflow-x: auto;
+  padding: 0;
+}
+
+.expense-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.expense-table thead tr {
+  border-bottom: 1px solid var(--border);
+}
+
+.expense-table th {
+  padding: 14px 18px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+.expense-row {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  animation: fadeIn 0.3s ease both;
+  transition: background 0.2s ease;
+}
+
+.expense-row:last-child {
+  border-bottom: none;
+}
+
+.expense-row:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.expense-table td {
+  padding: 14px 18px;
+  vertical-align: middle;
+}
+
+.expense-title-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.expense-color-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 0 6px currentColor;
+}
+
+.expense-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.expense-desc {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  max-width: 240px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.expense-date {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.expense-amount {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--success);
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* ===== MOBILE CARDS ===== */
+.expense-cards {
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.expense-card {
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  animation: fadeIn 0.3s ease both;
+}
+
+.expense-card-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.expense-card-left > div {
+  min-width: 0;
+}
+
+.expense-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+
+.expense-card-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .expense-table-wrapper {
+    display: none;
+  }
+
+  .expense-cards {
+    display: flex;
+  }
+
+  .filter-date {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .filter-select {
+    min-width: 130px;
+  }
+}
