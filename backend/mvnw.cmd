@@ -21,6 +21,7 @@
 @echo off
 
 set MAVEN_PROJECTBASEDIR=%~dp0
+if "%MAVEN_PROJECTBASEDIR:~-1%"=="\" set MAVEN_PROJECTBASEDIR=%MAVEN_PROJECTBASEDIR:~0,-1%
 
 @REM Find java.exe
 set JAVA_EXE=java.exe
@@ -49,6 +50,7 @@ if exist %WRAPPER_JAR% (
 
 :execute
 "%JAVA_EXE%" ^
+  "-Dmaven.multiModuleProjectDirectory=%MAVEN_PROJECTBASEDIR%" ^
   -classpath %WRAPPER_JAR% ^
   org.apache.maven.wrapper.MavenWrapperMain %*
 

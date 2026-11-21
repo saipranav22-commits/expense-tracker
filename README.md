@@ -1,119 +1,194 @@
-# 🧾 Premium Expense Tracker — Full Stack Application
+# 🧾 Premium Full-Stack Expense Tracker
 
-A production-ready, feature-rich **Expense Tracker** built with Spring Boot, React.js, PostgreSQL, Spring Security, and REST APIs. Designed as a top-tier portfolio project demonstrating modern full-stack development, premium visual styling (dark-mode glassmorphism), and robust engineering practices.
+[![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.4.1-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
+[![React](https://img.shields.io/badge/React-18.2.0-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16%2B-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Spring Security](https://img.shields.io/badge/Spring_Security-6.0-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white)](https://spring.io/projects/spring-security)
+[![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
-![Tech Stack](https://img.shields.io/badge/Spring_Boot-3.4.1-brightgreen) ![React](https://img.shields.io/badge/React-18.2.0-blue) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue) ![JWT](https://img.shields.io/badge/JWT-Auth-orange) ![Spring Security](https://img.shields.io/badge/Spring_Security-6-red)
+A modern, production-grade **Full-Stack Expense Tracker and Financial Intelligence Platform** built with **Spring Boot 3**, **React 18**, **PostgreSQL**, and **Spring Security 6**.
 
----
-
-## ✨ Features
-
-### 🔐 1. JWT Authentication & Spring Security
-- **Secure Authentication** — Register, Login, and secure session management.
-- **Session Prolongation** — Client-side auto-refresh interval (every 15 minutes) calling `/api/auth/refresh` to transparently renew JWT tokens without user disruption.
-- **Spring Security 6** — Modern stateless security filter chain with preflight CORS bypass handling.
-
-### 📈 2. Rich Analytics & Visual Dashboard
-- **Cumulative Trajectory Chart** — Interactive area chart showing daily spending progression vs. monthly budget targets.
-- **Month-over-Month (MoM) Analytics** — Auto-calculates velocity, burn pacing, and MoM trend vectors.
-- **Category Spending breakdown** — Distribution charts rendering clean, HSL-tailored colored badges.
-
-### 💰 3. Budget Control & Warning System
-- **Predefined Threshold Alerts** — Alerts when spending approaches 80% or exceeds category/monthly budgets.
-- **Visual Budget Trackers** — Modern, color-changing progress bars (Green → Orange → Red) based on actual spending.
-
-### 🔄 4. Self-Healing Recurring Expenses
-- **Automated Scheduling** — Set up transactions to repeat Daily, Weekly, Monthly, or Yearly.
-- **Self-Healing Catchup Loop** — Database catcher processes missed schedules during server downtime immediately on system startup.
-
-### 🏷️ 5. Premium UX & Inline Category Workflow
-- **Inline Category Creator** — Add custom color-coded categories on the fly with a hex color-picker directly inside the expense creation modal.
-- **Dark Mode Glassmorphism** — Sleek glass backdrop-filters, subtle gradients, micro-animations, and harmonized typography (Inter/Roboto).
-
-### 📄 6. Clean Binary Document Export
-- **PDF Summary Report** — Generate invoice-grade, beautifully aligned PDF reports of all expenses, transaction sums, and category metrics (powered by OpenPDF).
-- **CSV Data Export** — Instant, clean spreadsheet downloads.
+Designed with dark-mode glassmorphism, responsive visual analytics, multi-tier budget controls, self-healing recurring transaction automation, and cryptographic JWT session renewal.
 
 ---
 
-## 🏗️ Architecture
+## 🌐 Live Demo & Repository
 
+- **GitHub Repository**: [https://github.com/saipranav22-commits/expense-tracker](https://github.com/saipranav22-commits/expense-tracker)
+- **Live Production URL**: [https://expense-tracker-saipranav.onrender.com](https://expense-tracker-saipranav.onrender.com)
+- **Demo Account**:
+  - **Email**: `alex.demo@example.com`
+  - **Password**: `Password123!`
+
+---
+
+## 📸 Application Screenshots
+
+### 📊 Real-Time Financial Intelligence Dashboard
+> Interactive spending analytics with cumulative budget trajectory (Area Chart), 6-month comparative spending (Bar Chart), category distribution (Donut Pie Chart), and automated transaction catchup.
+
+![Full Dashboard](docs/screenshots/04_dashboard_full.png)
+
+---
+
+### ➕ Inline Category & Expense Creation
+> Dynamic expense modal with nested hex color-picker and instant category generation without interrupting data entry.
+
+| Expense Creation Modal | Authentication Gateway |
+|:---:|:---:|
+| ![Add Expense Modal](docs/screenshots/03_add_expense_modal.png) | ![Login Screen](docs/screenshots/01_login_page.png) |
+
+---
+
+## 🏛️ System Architecture
+
+```mermaid
+flowchart TD
+    subgraph Client ["Frontend Layer (React 18 SPA)"]
+        UI["Modern Glassmorphic UI"]
+        Axios["Axios Client + JWT Interceptors"]
+        Recharts["Recharts Visualization Engine"]
+        UI --> Axios
+        UI --> Recharts
+    end
+
+    subgraph Security ["Security & Gateway Layer"]
+        CORS["Configurable CORS Filter"]
+        JWT["JwtAuthFilter (HMAC-SHA256)"]
+        BCrypt["BCrypt Password Encoder"]
+    end
+
+    subgraph Backend ["Backend Layer (Spring Boot 3.4.1)"]
+        Controller["REST Controllers\n(/api/**)"]
+        Service["Domain Services & Catchup Schedulers"]
+        Repo["Spring Data JPA Repositories"]
+        SpaConfig["SpaWebConfig SPA Forwarder"]
+        Controller --> Service
+        Service --> Repo
+    end
+
+    subgraph Data ["Database Layer"]
+        PG[("PostgreSQL 16+ Database\n(Users, Expenses, Categories, Budgets, Recurring)")]
+    end
+
+    Axios -->|HTTPS / REST API| CORS
+    CORS --> JWT
+    JWT --> Controller
+    Repo -->|HikariCP / JDBC| PG
+    SpaConfig -->|Fallback Route| UI
 ```
-expense-tracker/
-├── backend/          ← Spring Boot REST API (Port 8081)
-└── frontend/         ← React.js SPA (Port 3000)
-```
-
-### Backend Design Patterns
-`Controller → Service → Repository → PostgreSQL`
-- **DTO Pattern** — Strictly isolates entity schemas from incoming HTTP request structures and outgoing JSON payloads.
-- **Global Exception Handling** — `@RestControllerAdvice` translates domain-specific exceptions into standardized REST JSON responses.
-- **Jakarta Validation** — End-to-end `@Valid` annotations guaranteeing strict bounds, formats, and non-empty requests.
 
 ---
 
-## 🔌 API Endpoints
+## ✨ Key Implemented Features
 
-### Authentication & Sessions
-| Method | URL | Auth | Description |
-|--------|-----|------|-------------|
-| POST | `/api/auth/register` | ❌ | Register a new user |
-| POST | `/api/auth/login` | ❌ | Login, returns JWT details |
-| POST | `/api/auth/refresh` | ✅ | Refreshes & prolongs active JWT session |
+### 1. 🔐 Cryptographic Authentication & Session Prolongation
+- Stateless **JWT (JSON Web Token)** authentication using HMAC-SHA256 signing.
+- BCrypt salted password hashing with strict Jakarta validation.
+- Auto-refresh mechanism (`/api/auth/refresh`) prolonging user sessions seamlessly.
 
-### Expense & Categories Management
-| Method | URL | Auth | Description |
-|--------|-----|------|-------------|
-| GET | `/api/expenses` | ✅ | List expenses (supports title/category filters) |
-| POST | `/api/expenses` | ✅ | Add a new expense (validates inputs) |
-| DELETE | `/api/expenses/{id}` | ✅ | Delete an expense (verifies ownership) |
-| GET | `/api/expenses/summary` | ✅ | Fetch high-level statistics and totals |
-| GET | `/api/categories` | ✅ | Get user categories |
-| POST | `/api/categories` | ✅ | Add custom category (custom color) |
-| DELETE | `/api/categories/{id}` | ✅ | Delete category |
+### 2. 📈 Multi-Dimensional Financial Analytics
+- **Cumulative Trajectory Chart**: Day-by-day accumulated monthly spend mapped against overall budget threshold.
+- **6-Month Velocity Bar Chart**: Historic spending breakdown across previous billing cycles.
+- **Dynamic Category Donut Chart**: Proportional category distribution with custom color coding.
+- **Automated Insights**: Heuristic analysis surfacing top burn categories and pacing alerts.
 
-### Budgets, Schedules, Insights, & Exports
-| Method | URL | Auth | Description |
-|--------|-----|------|-------------|
-| GET | `/api/budgets` | ✅ | Get spending vs budget limits |
-| POST | `/api/budgets` | ✅ | Set/update category or monthly budget |
-| DELETE | `/api/budgets/{id}` | ✅ | Delete a budget |
-| GET | `/api/recurring` | ✅ | List all recurring schedules |
-| POST | `/api/recurring` | ✅ | Create new recurring schedule |
-| PUT | `/api/recurring/{id}/toggle` | ✅ | Toggle schedule active status |
-| DELETE | `/api/recurring/{id}` | ✅ | Delete recurring schedule |
-| GET | `/api/expenses/insights` | ✅ | Fetch velocity and spending insights |
-| GET | `/api/expenses/export/csv` | ✅ | Export custom CSV spreadsheet |
-| GET | `/api/expenses/export/pdf` | ✅ | Stream beautifully rendered PDF report |
+### 3. 🎯 Budget Target & Threshold Monitoring
+- Set category-specific and overall monthly spending targets.
+- Real-time progress bars with dynamic status indicators (`Success` < 80% → `Warning` 80-99% → `Danger` ≥ 100%).
+
+### 4. 🔁 Self-Healing Recurring Transactions
+- Create automated recurring transactions (Daily, Weekly, Monthly, Yearly).
+- **Startup Catchup Loop**: Automatically detects and retroactively generates missed scheduled transactions incurred during system downtime.
+- Active / Inactive toggle control with automated next-due-date calculation.
+
+### 5. 📄 Document Generation & Data Portability
+- **CSV Data Export**: One-click streaming download of filtered transaction spreadsheets.
+- **Formatted PDF Report**: Invoice-grade PDF summaries generated server-side using OpenPDF.
 
 ---
 
-## 🚀 Setup & Running
+## 🔌 Complete REST API Specification
+
+### 🔐 Authentication & Session
+| Method | Endpoint | Auth | Description |
+|---|---|:---:|---|
+| `POST` | `/api/auth/register` | ❌ | Register new account and receive initial JWT |
+| `POST` | `/api/auth/login` | ❌ | Authenticate credentials and return JWT payload |
+| `POST` | `/api/auth/refresh` | 🔒 | Validate existing token and issue prolonged token |
+
+### 💸 Expenses Management
+| Method | Endpoint | Auth | Description |
+|---|---|:---:|---|
+| `GET` | `/api/expenses` | 🔒 | List user expenses (supports `search` & `categoryId` query filters) |
+| `POST` | `/api/expenses` | 🔒 | Record new expense with amount, date, and category |
+| `DELETE` | `/api/expenses/{id}` | 🔒 | Delete expense with ownership verification |
+| `GET` | `/api/expenses/summary` | 🔒 | Aggregate monthly total, all-time total, and monthly breakdown |
+| `GET` | `/api/expenses/insights`| 🔒 | Retrieve automated velocity and spend distribution insights |
+
+### 🏷️ Category Management
+| Method | Endpoint | Auth | Description |
+|---|---|:---:|---|
+| `GET` | `/api/categories` | 🔒 | List all user-configured categories |
+| `POST` | `/api/categories` | 🔒 | Create custom category with custom HEX color |
+| `DELETE` | `/api/categories/{id}` | 🔒 | Remove category |
+
+### 🎯 Budgets & 🔁 Recurring Schedules
+| Method | Endpoint | Auth | Description |
+|---|---|:---:|---|
+| `GET` | `/api/budgets` | 🔒 | Get all monthly budget limits and progress |
+| `POST` | `/api/budgets` | 🔒 | Define or update category/overall budget limit |
+| `DELETE` | `/api/budgets/{id}` | 🔒 | Delete budget target |
+| `GET` | `/api/recurring` | 🔒 | List scheduled subscriptions |
+| `POST` | `/api/recurring` | 🔒 | Schedule new recurring transaction |
+| `PUT` | `/api/recurring/{id}/toggle` | 🔒 | Toggle schedule active/paused state |
+| `DELETE` | `/api/recurring/{id}` | 🔒 | Remove recurring schedule |
+
+### 📄 Export Services
+| Method | Endpoint | Auth | Description |
+|---|---|:---:|---|
+| `GET` | `/api/expenses/export/csv` | 🔒 | Stream formatted CSV file |
+| `GET` | `/api/expenses/export/pdf` | 🔒 | Stream formatted PDF financial statement |
+
+---
+
+## 🛠️ Tech Stack & Dependencies
+
+| Area | Technology | Purpose |
+|---|---|---|
+| **Backend Framework** | Spring Boot 3.4.1 | Production REST API core |
+| **Language / Runtime** | Java 21 / 23 | Modern LTS Java runtime |
+| **Security** | Spring Security 6, JJWT 0.11.5 | Stateless JWT authentication & RBAC |
+| **Persistence / ORM** | Spring Data JPA, Hibernate ORM 6.6 | Database abstraction & schema management |
+| **Database** | PostgreSQL 16+ | ACID-compliant relational persistence |
+| **Document Export** | OpenPDF 1.3.30 | Vector PDF generation |
+| **Frontend SPA** | React 18.2.0, React Router v6 | Component-driven UI & client-side routing |
+| **Data Visualization**| Recharts 2.10 | Responsive interactive SVG charts |
+| **HTTP Client** | Axios 1.6 | Interceptor-managed API communications |
+| **Containerization** | Docker (Multi-stage build) | Production image packaging |
+
+---
+
+## 🚀 Local Setup & Installation
 
 ### Prerequisites
-- **Java 17+** (Developed and validated on JDK 17/23)
+- **JDK 17+** (JDK 21 or 23 recommended)
 - **Node.js 18+** & npm
-- **PostgreSQL 14+**
+- **PostgreSQL 14+** running locally or in Docker
 
 ### 1. Database Setup
 ```sql
--- Open pgAdmin or psql and run:
 CREATE DATABASE expensedb;
 ```
 
 ### 2. Backend Setup
 ```bash
 cd backend
-
-# Properties configured in src/main/resources/application.properties:
-# spring.datasource.url=jdbc:postgresql://localhost:5432/expensedb
-# spring.datasource.username=postgres
-# spring.datasource.password=password
-
-# Compile and Run using the Maven Wrapper:
-.\mvnw spring-boot:run
+# Run via Maven Wrapper
+./mvnw clean spring-boot:run
 ```
-Backend starts at: **http://localhost:8081**
+*The Spring Boot backend will start on port `8081`.*
 
 ### 3. Frontend Setup
 ```bash
@@ -121,66 +196,35 @@ cd frontend
 npm install
 npm start
 ```
-Frontend opens at: **http://localhost:3000**
+*The React application will open on `http://localhost:3000`.*
 
 ---
 
-## 🧪 Interactive Validation
+## 🚢 Production Deployment
 
-### JWT Session Prolongation
-Open the browser developer console (F12) while logged in to the dashboard. You will see:
-```
-Token refreshed successfully
-```
-every 15 minutes. This runs seamlessly in the background, updating `localStorage` and keeping the user authenticated.
+The project includes production-ready Docker packaging and Infrastructure-as-Code for zero-cost deployment.
 
-### Smart Insights & Budget Warnings
-- Attempt to set an overall monthly budget of **₹10,000** on the Dashboard budget panel.
-- Add an expense exceeding the category threshold.
-- The **Smart Insights Card** will instantly trigger warnings:
-  > ⚠️ WARNING: Groceries has reached 87% of its budget limit!
+### Option A: Unified Container (Render / Railway / Koyeb)
+1. Fork or push this repository to GitHub.
+2. In [Render](https://render.com), click **New +** → **Blueprint** and select this repository.
+3. Render reads `render.yaml`, provisions a free **PostgreSQL Database**, builds the multi-stage `Dockerfile`, and serves the full application on a single secure HTTPS URL.
 
----
-
-## 🎯 Interview Talking Points
-
-- **"Explain your DB architecture for Recurring Expenses."**
-  - Evaluates using custom fields `last_processed_date`, `next_due_date`, and `Frequency` (DAILY, WEEKLY, MONTHLY, YEARLY).
-  - Employs a **startup listener** and **scheduled cron catcher** that automatically computes missed occurrences between the last processed date and the current date. It operates in standard Spring Boot `@Transactional` blocks to ensure strict database integrity and prevents duplicate processing.
-
-- **"How does the PDF export work without local file caching?"**
-  - Implements Spring `ResponseEntity<byte[]>` streaming.
-  - Leverages the `openpdf` library to build page templates in-memory.
-  - Maps tabular data, headers, alignment grids, and shapes into an output stream, returning binary buffers with appropriate content headers (`Content-Disposition: attachment; filename=report.pdf`) so browser downloads are processed securely under Bearer token headers.
-
-- **"How did you bypass CORS preflight blocks in Spring Security 6?"**
-  - Created a dedicated `CorsConfigurationSource` bean.
-  - Allowed custom headers like `Authorization` and methods like `OPTIONS` explicitly, injecting the filters directly into the `securityFilterChain` before authorization gates to prevent 403 Forbidden on preflight pre-checks.
+### Option B: Decoupled (Vercel Frontend + Render Backend)
+1. Deploy `backend` to Render with `SPRING_DATASOURCE_URL` pointing to **Neon / Supabase**.
+2. Deploy `frontend` to Vercel with Root Directory set to `frontend` and Environment Variable:
+   ```env
+   REACT_APP_API_URL=https://<your-backend-service>.onrender.com/api
+   ```
 
 ---
 
-## 📁 Project Structure
+## 💼 Resume Bullet Points
 
-```
-backend/src/main/java/com/expensetracker/
-├── config/          SecurityConfig.java (Stateless JWT + CORS)
-├── controller/      AuthController, ExpenseController, CategoryController, BudgetController, RecurringExpenseController, ExportController, InsightController
-├── dto/             Request/Response DTO models
-├── exception/       GlobalExceptionHandler (@RestControllerAdvice maps domain failures to 400/404/500 JSON)
-├── model/           JPA Entities (User, Expense, Category, Budget, RecurringExpense)
-├── repository/      JPA Interfaces with optimized JPQL queries
-├── security/        JwtUtil, JwtAuthFilter, UserDetailsServiceImpl
-└── service/         AuthService, ExpenseService, CategoryService, BudgetService, RecurringExpenseService, InsightService, ExportService
-
-frontend/src/
-├── components/      Navbar, ExpenseForm (with inline category color-picker), ExpenseList, SummaryCard, CategoryBadge
-├── context/         AuthContext (JWT Auto-Refresh loop)
-├── pages/           LoginPage, RegisterPage, DashboardPage (Trajectory Area charts, Insights panel, Configurator widgets)
-└── services/        api.js (Axios networking layer with automatic Bearer token injection)
-```
+- **Architected and deployed a full-stack financial platform** with Spring Boot 3, React 18, and PostgreSQL, featuring stateless JWT authentication with automated session renewal and BCrypt password encryption.
+- **Engineered a self-healing recurring transaction engine** that catches up and processes missed subscription schedules across server downtime, paired with multi-metric financial charting (Recharts) and dynamic budget alerts.
+- **Implemented multi-stage containerized deployment (Docker, Render, Neon)**, optimizing production artifacts to a 52MB executable container with 12-factor environment variable isolation, CORS controls, and OpenPDF/CSV report generation.
 
 ---
 
-## 👤 Author
-
-Developed by an experienced Full-Stack Engineer with high attention to performance, UI/UX aesthetics, and system reliability.
+## 📄 License
+This project is open-source software.

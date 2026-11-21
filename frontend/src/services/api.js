@@ -1,8 +1,10 @@
 import axios from 'axios';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8081/api';
+
 // Create axios instance
 const api = axios.create({
-  baseURL: 'http://localhost:8081/api',
+  baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -64,7 +66,7 @@ export const deleteRecurringExpense = (id) => api.delete(`/recurring/${id}`);
 export const getInsights = () => api.get('/expenses/insights');
 
 // ===== EXPORTS =====
-export const getCsvExportUrl = () => 'http://localhost:8081/api/expenses/export/csv';
-export const getPdfExportUrl = () => 'http://localhost:8081/api/expenses/export/pdf';
+export const getCsvExportUrl = () => `${API_BASE_URL}/expenses/export/csv`;
+export const getPdfExportUrl = () => `${API_BASE_URL}/expenses/export/pdf`;
 
 export default api;

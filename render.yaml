@@ -1,0 +1,35 @@
+services:
+  # Web Service running unified Spring Boot + React SPA
+  - type: web
+    name: expense-tracker-app
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: oregon
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: expensedb
+          property: connectionString
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: expensedb
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: expensedb
+          property: password
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CORS_ALLOWED_ORIGINS
+        value: "*"
+
+databases:
+  # Managed PostgreSQL Instance
+  - name: expensedb
+    databaseName: expensedb
+    user: postgres
+    plan: free
+    region: oregon

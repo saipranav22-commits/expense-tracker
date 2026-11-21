@@ -23,7 +23,9 @@ import {
   createRecurringExpense,
   toggleRecurringExpense,
   deleteRecurringExpense,
-  getInsights
+  getInsights,
+  getCsvExportUrl,
+  getPdfExportUrl
 } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import './DashboardPage.css';
@@ -325,7 +327,7 @@ function DashboardPage() {
   const handleExportCsv = async () => {
     try {
       const token = localStorage.getItem('expense_tracker_token');
-      const response = await fetch('http://localhost:8081/api/expenses/export/csv', {
+      const response = await fetch(getCsvExportUrl(), {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -346,7 +348,7 @@ function DashboardPage() {
   const handleExportPdf = async () => {
     try {
       const token = localStorage.getItem('expense_tracker_token');
-      const response = await fetch('http://localhost:8081/api/expenses/export/pdf', {
+      const response = await fetch(getPdfExportUrl(), {
         headers: {
           'Authorization': `Bearer ${token}`
         }
