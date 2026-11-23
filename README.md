@@ -16,7 +16,7 @@ Designed with dark-mode glassmorphism, responsive visual analytics, multi-tier b
 ## 🌐 Live Demo & Repository
 
 - **GitHub Repository**: [https://github.com/saipranav22-commits/expense-tracker](https://github.com/saipranav22-commits/expense-tracker)
-- **Live Production URL**: [https://expense-tracker-saipranav.onrender.com](https://expense-tracker-saipranav.onrender.com)
+- **Live Production URL**: [https://expense-tracker-app-xxjb.onrender.com](https://expense-tracker-app-xxjb.onrender.com)
 - **Demo Account**:
   - **Email**: `alex.demo@example.com`
   - **Password**: `Password123!`
