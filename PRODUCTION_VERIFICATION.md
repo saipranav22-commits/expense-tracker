@@ -3,93 +3,76 @@
 **Deployment Date**: November 23, 2026  
 **Status**: 🟢 **VERIFIED LIVE IN PRODUCTION**  
 **Live URL**: [https://expense-tracker-app-xxjb.onrender.com](https://expense-tracker-app-xxjb.onrender.com)  
+**Login Page**: [https://expense-tracker-app-xxjb.onrender.com/login](https://expense-tracker-app-xxjb.onrender.com/login)  
 **Repository**: [https://github.com/saipranav22-commits/expense-tracker](https://github.com/saipranav22-commits/expense-tracker)  
 **Hosting Provider**: Render (Free Web Service — Unified Multi-Stage Docker)  
 **Database**: Neon Serverless PostgreSQL (Free Tier)  
-**Last Deployed Commit**: `1350aa8`
+**Last Verified Deployment Commit**: `1350aa8`
 
 ---
 
 ## 1. Executive Summary
-The Expense Tracker full-stack application (React 18 SPA + Spring Boot 3.4.1 + PostgreSQL 16) was successfully packaged into a single containerized Docker runtime and deployed to Render. All core user journeys—including user registration, JWT-secured authentication, expense CRUD, category tracking, budget enforcement, recurring expense management, statistical summaries, automated spending insights, and binary CSV/PDF document generation—were executed directly against the live production infrastructure and verified with full data persistence.
+The Expense Tracker application is deployed as a unified single-container runtime (React 18 SPA + Spring Boot 3.4.1 monolithic web service) on Render's Free tier, backed by Neon's serverless PostgreSQL.
+
+All production API flows—including user registration, JWT login, expense CRUD, category creation, budget setup, recurring expense scheduling, rule-based insight generation, and binary document downloads (CSV and OpenPDF)—were directly validated against the live HTTPS production endpoint (`https://expense-tracker-app-xxjb.onrender.com`).
 
 ---
 
-## 2. Verified Test Matrix
+## 2. Verified Test Matrix & Evidence
 
-| # | Test Scenario | Method / Endpoint | Expected Result | Production Result | Status |
-|---|---|---|---|---|---|
-| **1** | **Root SPA Routing** | `GET /` | Returns `200 OK`, index.html, static assets linked | HTTP 200, Inter font, bundled CSS/JS | ✅ PASS |
-| **2** | **Deep SPA Routing** | `GET /login` | Spring Boot resolves SPA route via `SpaWebConfig` without 404 | HTTP 200, index.html served cleanly | ✅ PASS |
-| **3** | **User Registration** | `POST /api/auth/register` | Creates user in Neon DB, issues valid JWT | User created, JWT token returned | ✅ PASS |
-| **4** | **JWT Authentication** | `POST /api/auth/login` | Authenticates email/password, returns signed JWT | HTTP 200, Bearer token issued | ✅ PASS |
-| **5** | **Category Management** | `POST /api/categories`, `GET /api/categories` | Creates categories with color hex codes & icons | ID 1 ("Utilities"), ID 2 ("Groceries"), ID 3 ("Cloud & SaaS") created | ✅ PASS |
-| **6** | **Expense Creation** | `POST /api/expenses` | Stores transaction linked to user and category | Created IDs 4, 5, 6 with exact amounts ($84.50, $14.99, $5.49) | ✅ PASS |
-| **7** | **Expense Retrieval** | `GET /api/expenses` | Returns list of expenses isolated to authenticated user | 5 transactions retrieved, sorted by date | ✅ PASS |
-| **8** | **Expense Deletion** | `DELETE /api/expenses/{id}` | Deletes record; decreases user count | Expense ID 6 deleted, count verified | ✅ PASS |
-| **9** | **Budget Management** | `POST /api/budgets`, `GET /api/budgets` | Creates budget threshold and calculates spent/remaining | Budget ID 1 ($500.00) created and linked to category | ✅ PASS |
-| **10** | **Recurring Expenses** | `POST /api/recurring`, `PUT /api/recurring/{id}/toggle` | Schedules subscription, toggles active status | ID 1 ($12.00) created; active status toggled | ✅ PASS |
-| **11** | **Automated Insights** | `GET /api/expenses/insights` | Generates spending rule alerts and actionable advice | Returned categorized insights based on thresholds | ✅ PASS |
-| **12** | **CSV Data Export** | `GET /api/expenses/export/csv` | Streams `text/csv` attachment with formatted rows | 602 bytes CSV stream with headers and data | ✅ PASS |
-| **13** | **PDF Report Export** | `GET /api/expenses/export/pdf` | Generates iText PDF binary (`application/pdf`) | 2,115 bytes binary PDF document (`%PDF-1.5`) | ✅ PASS |
-| **14** | **Data Persistence** | Multi-session API test | Data persisted across reconnects and sessions | Neon PostgreSQL retains all user rows | ✅ PASS |
-| **15** | **CORS Protection** | `OPTIONS /api/expenses` (Unauthorized origin) | Denies untrusted external origins | HTTP 403 Forbidden ("Invalid CORS request") | ✅ PASS |
-| **16** | **CORS Authorization** | `OPTIONS /api/expenses` (Production origin) | Accepts `https://expense-tracker-app-xxjb.onrender.com` | HTTP 200 OK with allowed methods | ✅ PASS |
-
----
-
-## 3. Architecture & Hosting Topology
-
-```
-   [ Client Browser ]
-           │
-           ▼ (HTTPS / TLS 1.3)
-   [ Cloudflare CDN Edge ]
-           │
-           ▼ (Port 8080)
-┌──────────────────────────────────────────────────────────┐
-│ Render Free Web Service (Docker Container)               │
-│                                                          │
-│  ┌────────────────────────┐  ┌────────────────────────┐  │
-│  │   React 18 SPA Build   │  │    Spring Boot 3.4     │  │
-│  │  (Tailwind + Recharts) │──│  (Java 21 LTS Runtime) │  │
-│  └────────────────────────┘  └───────────┬────────────┘  │
-│                                          │               │
-└──────────────────────────────────────────┼───────────────┘
-                                           │ (HikariCP SSL)
-                                           ▼
-                 ┌───────────────────────────────────┐
-                 │    Neon Serverless PostgreSQL     │
-                 │   (Free Tier, US-East AWS Cloud)  │
-                 └───────────────────────────────────┘
-```
+| # | Test Scenario | Verified Endpoint / Method | Production Evidence | Result |
+|---|---|---|---|---|
+| **1** | **Root SPA Delivery** | `GET /` | Returns `HTTP 200 OK`, `index.html` referencing `/static/js/main.e78273b2.js` and `/static/css/main.a676b597.css`. | ✅ **PASS** |
+| **2** | **Deep SPA Routing** | `GET /login` | Spring Boot `SpaWebConfig` forwards non-API paths to `index.html`; returns `HTTP 200 OK` without 404 error. | ✅ **PASS** |
+| **3** | **User Registration** | `POST /api/auth/register` | Request: `{"name":"Production Tester","email":"prodtest_001@example.com","password":"..."}`<br>Response: HTTP 200, JWT token returned (`eyJhbGci...`). | ✅ **PASS** |
+| **4** | **JWT Authentication** | `POST /api/auth/login` | Verified authentication with valid credentials; issued 24-hour signed JWT token used for subsequent Bearer requests. | ✅ **PASS** |
+| **5** | **Category Creation** | `POST /api/categories`<br>`GET /api/categories` | Created Category ID 1 (`Utilities`), ID 2 (`Groceries`), ID 3 (`Cloud & SaaS`). Fetched and verified in user category list. | ✅ **PASS** |
+| **6** | **Expense Creation** | `POST /api/expenses` | Created expenses with amounts ($84.50, $14.99, $5.49) mapped to Category IDs. Verified persistence in Neon DB. | ✅ **PASS** |
+| **7** | **Expense Retrieval** | `GET /api/expenses` | Returns user transactions sorted by date descending. Verified correct JSON payload structure. | ✅ **PASS** |
+| **8** | **Expense Deletion** | `DELETE /api/expenses/{id}` | Deleted created expense ID 6. Verified deletion by querying `/api/expenses` and observing count decrease. | ✅ **PASS** |
+| **9** | **Budget Management** | `POST /api/budgets`<br>`GET /api/budgets` | Created Budget ID 1 ($500.00) assigned to Category ID 1 (`Utilities`). Verified retrieval via `/api/budgets`. | ✅ **PASS** |
+| **10** | **Recurring Expenses** | `POST /api/recurring`<br>`PUT /api/recurring/{id}/toggle` | Created recurring expense ID 1 ($12.00, `MONTHLY`). Executed toggle endpoint; verified `active` flag changed from `true` to `false`. | ✅ **PASS** |
+| **11** | **Spending Insights** | `GET /api/expenses/insights` | Evaluated budget thresholds; returned rule-based insight objects (`[INFO] ...`) based on current user expense data. | ✅ **PASS** |
+| **12** | **CSV Data Export** | `GET /api/expenses/export/csv` | Downloaded 602-character CSV formatted with headers (`ID,Title,Amount (INR),Date,Category,Description,Created At`). | ✅ **PASS** |
+| **13** | **PDF Report Export** | `GET /api/expenses/export/pdf` | Generated and downloaded 2,115-byte binary document with valid `%PDF-1.5` magic header using OpenPDF (`com.github.librepdf:openpdf:1.3.30`). | ✅ **PASS** |
+| **14** | **CORS Origin Rejection** | `OPTIONS /api/expenses`<br>`Origin: https://malicious-site.example.com` | Blocked unauthorized cross-origin request with `HTTP 403 Forbidden` (`Invalid CORS request`). | ✅ **PASS** |
+| **15** | **CORS Origin Acceptance** | `OPTIONS /api/expenses`<br>`Origin: https://expense-tracker-app-xxjb.onrender.com` | Allowed production origin with `HTTP 200 OK` and proper preflight headers. | ✅ **PASS** |
 
 ---
 
-## 4. Security & Environment Configuration Review
+## 3. Browser Testing Status
 
-- **Zero Credential Leakage**: Database URLs, database passwords, and JWT signing keys are completely decoupled into 12-factor environment variables (`SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_PASSWORD`, `JWT_SECRET`). No production secrets exist in source code or Git history.
-- **Principle of Least Privilege**: The production Docker container executes under a non-root system user (`appuser:appgroup`), avoiding container root breakout risks.
-- **HikariCP Connection Pool**: Parameterized with Neon-optimized values (`maximum-pool-size: 5`, `max-lifetime: 60000ms`, `idle-timeout: 30000ms`) to seamlessly handle serverless Postgres cold-sleeps without throwing broken pipe exceptions.
-- **Production CORS**: Strictly locked down to the actual deployed frontend domain and rejected external unwhitelisted origins with `HTTP 403 Forbidden`.
+- **Automated Browser Subagent**: Attempted execution via Chrome DevTools protocol (`chrome_devtools`), but the connection timed out waiting for the local interactive Chrome remote debugging confirmation prompt (`context deadline exceeded`).
+- **Direct HTTP & SPA Verification**:
+  - The bundled React production JavaScript bundle (`/static/js/main.e78273b2.js`) and CSS bundle (`/static/css/main.a676b597.css`) are served with `HTTP 200 OK` and correct MIME types.
+  - Client-side routing resolves without server errors or asset 404s.
+  - Manual browser verification can be executed at [https://expense-tracker-app-xxjb.onrender.com/login](https://expense-tracker-app-xxjb.onrender.com/login) in any desktop or mobile browser.
 
 ---
 
-## 5. Free-Tier Limitations & Operational Considerations
+## 4. Architecture & Security Review
 
-1. **Render Free Web Service Sleep Cycle**:
-   - The free web instance automatically spins down after 15 minutes of inactivity.
-   - The first request after a sleep period requires a ~50-second cold-start while the container launches and initializes the Spring Boot context.
-2. **Neon Serverless PostgreSQL Suspension**:
-   - Neon serverless compute instances suspend after 5 minutes of idle queries to conserve compute hours.
-   - The Hikari pool is configured to reconnect automatically without crashing the backend service.
-3. **Monthly Free Allowance**:
-   - Render provides 750 free instance hours per month, perfectly sufficient for personal portfolio and continuous demo hosting.
+- **Zero Hardcoded Secrets**: All production database credentials (`SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME`, `SPRING_DATASOURCE_PASSWORD`) and JWT signing keys (`JWT_SECRET`) are injected exclusively via Render environment variables.
+- **Container Hardening**: The multi-stage Docker container runs under an unprivileged user (`appuser:appgroup`), mitigating container escape risks.
+- **HikariCP Pool Configuration**: Parameterized with `maximum-pool-size=5`, `max-lifetime=60000ms`, and `idle-timeout=30000ms` to cleanly tolerate Neon serverless compute sleep cycles without connection leaks.
+- **Isolated User Data**: All JPA repository queries enforce isolation by authenticated `userId`, preventing cross-account data leakage.
+
+---
+
+## 5. Free-Tier Operational Characteristics & Limitations
+
+1. **Render Free Tier Spin-Down**:
+   - The web service instance spins down after 15 minutes of inactivity.
+   - The first request after idling triggers a cold start (~50 seconds) while the JVM initializes.
+2. **Neon Serverless Database Suspension**:
+   - Neon serverless compute suspends after 5 minutes of idle queries. Hikari pool handles reconnects automatically on incoming requests.
+3. **Monthly Bandwidth & Usage**:
+   - 750 free instance hours per month on Render, suitable for portfolio demonstrations.
 
 ---
 
 ## 6. ATS-Friendly Resume Bullet Points
 
-- **Full-Stack Cloud Architecture & Containerization**: Architected and deployed an end-to-end Expense Tracking platform utilizing React 18, Spring Boot 3, and PostgreSQL, containerizing both frontend and backend into a single multi-stage Docker build deployed on Render Free Tier and Neon Serverless DB with zero cloud hosting costs.
-- **Resilient Microservice & Database Integration**: Engineered a 12-factor production pipeline with Java 21, Hikari connection pooling optimized for serverless database sleep-cycles, Spring Security with stateless JWT authentication, and strict CORS policies rejecting unauthorized cross-origin requests.
-- **Data Analytics & Binary Document Streaming**: Designed robust financial analytics and document generation services utilizing iText PDF and OpenCSV, enabling real-time budget threshold calculation, category spending breakdowns, and secure binary report downloads with sub-100ms processing times.
+- **Full-Stack Application Deployment & Containerization**: Architected and deployed an end-to-end Expense Tracker application combining a React 18 SPA and Spring Boot 3 REST API into a unified multi-stage Docker container on Render Free Tier backed by Neon Serverless PostgreSQL with zero hosting costs.
+- **Resilient Cloud & Database Integration**: Implemented a 12-factor production pipeline with Java 21, stateless JWT authentication via Spring Security, strict domain-whitelisted CORS validation, and HikariCP connection pooling tuned for serverless PostgreSQL sleep cycles.
+- **Document Generation & Financial Reporting**: Developed automated financial reporting endpoints utilizing OpenPDF and custom CSV streaming, enabling users to schedule recurring expenses, set category budgets, and download generated spending summaries.
