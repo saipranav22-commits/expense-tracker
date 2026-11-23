@@ -72,6 +72,34 @@ public class ExpenseService {
         return toResponse(saved);
     }
 
+    public ExpenseResponse updateExpense(Long id, ExpenseRequest request, String email) {
+        User user = getUser(email);
+        Expense expense = expenseRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Expense not found"));
+
+        if (!expense.getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("Access denied: You don't own this expense");
+        }
+
+        Category category = null;
+        if (request.getCategoryId() != null) {
+            category = categoryRepository.findById(request.getCategoryId())
+                    .orElseThrow(() -> new RuntimeException("Category not found"));
+            if (!category.getUser().getId().equals(user.getId())) {
+                throw new RuntimeException("Access denied: You don't own this category");
+            }
+        }
+
+        expense.setTitle(request.getTitle());
+        expense.setAmount(request.getAmount());
+        expense.setDate(request.getDate());
+        expense.setDescription(request.getDescription());
+        expense.setCategory(category);
+
+        Expense updated = expenseRepository.save(expense);
+        return toResponse(updated);
+    }
+
     public void deleteExpense(Long id, String email) {
         User user = getUser(email);
         Expense expense = expenseRepository.findById(id)

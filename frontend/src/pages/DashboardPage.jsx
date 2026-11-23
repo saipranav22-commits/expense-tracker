@@ -106,6 +106,7 @@ function DashboardPage() {
   const [loadingCategories, setLoadingCategories] = useState(true);
   const [loadingSummary, setLoadingSummary] = useState(true);
   const [showExpenseForm, setShowExpenseForm] = useState(false);
+  const [editingExpense, setEditingExpense] = useState(null);
   const [expenseError, setExpenseError] = useState('');
   const [categoryError, setCategoryError] = useState('');
 
@@ -999,7 +1000,10 @@ function DashboardPage() {
             </div>
             <button
               className="btn"
-              onClick={() => setShowExpenseForm(true)}
+              onClick={() => {
+                setEditingExpense(null);
+                setShowExpenseForm(true);
+              }}
             >
               <span>➕</span>
               <span>Add Expense</span>
@@ -1037,6 +1041,10 @@ function DashboardPage() {
             <ExpenseList
               expenses={expenses}
               categories={categories}
+              onEdit={(exp) => {
+                setEditingExpense(exp);
+                setShowExpenseForm(true);
+              }}
               onDelete={handleDeleteExpense}
             />
           )}
@@ -1047,9 +1055,18 @@ function DashboardPage() {
       {showExpenseForm && (
         <ExpenseForm
           categories={categories}
-          onAdd={handleAddExpense}
+          initialData={editingExpense}
+          onAdd={() => {
+            fetchExpenses();
+            fetchSummary();
+            fetchBudgets();
+            fetchInsights();
+          }}
           onRefreshCategories={fetchCategories}
-          onClose={() => setShowExpenseForm(false)}
+          onClose={() => {
+            setShowExpenseForm(false);
+            setEditingExpense(null);
+          }}
         />
       )}
     </div>

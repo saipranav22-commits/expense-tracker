@@ -50,6 +50,16 @@ public class ExpenseController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<ExpenseResponse> updateExpense(
+            @PathVariable Long id,
+            @Valid @RequestBody ExpenseRequest request,
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        ExpenseResponse response = expenseService.updateExpense(id, request, userDetails.getUsername());
+        return ResponseEntity.ok(response);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteExpense(
             @PathVariable Long id,

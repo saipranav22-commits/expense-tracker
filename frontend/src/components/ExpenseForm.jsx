@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { addExpense, addCategory } from '../services/api';
+import React, { useState, useEffect } from 'react';
+import { addExpense, updateExpense, addCategory } from '../services/api';
 import './ExpenseForm.css';
 
 const today = new Date().toISOString().split('T')[0];
@@ -12,8 +12,34 @@ const initialForm = {
   description: '',
 };
 
-function ExpenseForm({ categories, onAdd, onRefreshCategories, onClose }) {
-  const [form, setForm] = useState(initialForm);
+function ExpenseForm({ categories, initialData = null, onAdd, onRefreshCategories, onClose }) {
+  const isEditing = Boolean(initialData && initialData.id);
+
+  const [form, setForm] = useState(() => {
+    if (initialData) {
+      return {
+        title: initialData.title || '',
+        amount: initialData.amount ? String(initialData.amount) : '',
+        date: initialData.date || today,
+        categoryId: initialData.categoryId ? String(initialData.categoryId) : '',
+        description: initialData.description || '',
+      };
+    }
+    return initialForm;
+  });
+
+  useEffect(() => {
+    if (initialData) {
+      setForm({
+        title: initialData.title || '',
+        amount: initialData.amount ? String(initialData.amount) : '',
+        date: initialData.date || today,
+        categoryId: initialData.categoryId ? String(initialData.categoryId) : '',
+        description: initialData.description || '',
+      });
+    }
+  }, [initialData]);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -80,15 +106,19 @@ function ExpenseForm({ categories, onAdd, onRefreshCategories, onClose }) {
         categoryId: form.categoryId ? parseInt(form.categoryId, 10) : null,
         description: form.description.trim(),
       };
-      await addExpense(payload);
+      if (isEditing) {
+        await updateExpense(initialData.id, payload);
+      } else {
+        await addExpense(payload);
+      }
       onAdd();
       onClose();
     } catch (err) {
       const msg =
         err?.response?.data?.message ||
         err?.response?.data ||
-        'Failed to add expense. Please try again.';
-      setError(typeof msg === 'string' ? msg : 'Failed to add expense.');
+        (isEditing ? 'Failed to update expense. Please try again.' : 'Failed to add expense. Please try again.');
+      setError(typeof msg === 'string' ? msg : 'An error occurred.');
     } finally {
       setLoading(false);
     }
@@ -101,10 +131,12 @@ function ExpenseForm({ categories, onAdd, onRefreshCategories, onClose }) {
         <div className="modal-header">
           <div>
             <h2 className="modal-title">
-              <span>➕</span>
-              <span>Add New Expense</span>
+              <span>{isEditing ? '✏️' : '➕'}</span>
+              <span>{isEditing ? 'Edit Expense' : 'Add New Expense'}</span>
             </h2>
-            <p className="modal-subtitle">Record your spending details</p>
+            <p className="modal-subtitle">
+              {isEditing ? 'Update spending or reassign category' : 'Record your spending details'}
+            </p>
           </div>
           <button className="modal-close btn btn-ghost btn-icon" onClick={onClose}>
             ✕
@@ -289,12 +321,12 @@ function ExpenseForm({ categories, onAdd, onRefreshCategories, onClose }) {
               {loading ? (
                 <>
                   <span className="spinner" />
-                  <span>Adding...</span>
+                  <span>{isEditing ? 'Saving...' : 'Adding...'}</span>
                 </>
               ) : (
                 <>
                   <span>💾</span>
-                  <span>Add Expense</span>
+                  <span>{isEditing ? 'Save Changes' : 'Add Expense'}</span>
                 </>
               )}
             </button>

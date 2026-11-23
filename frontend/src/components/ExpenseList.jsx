@@ -11,7 +11,7 @@ const formatDate = (dateStr) => {
   return d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
 };
 
-function ExpenseList({ expenses = [], categories = [], onDelete }) {
+function ExpenseList({ expenses = [], categories = [], onEdit, onDelete }) {
   const [search, setSearch] = useState('');
   const [filterCategory, setFilterCategory] = useState('');
   const [filterDateFrom, setFilterDateFrom] = useState('');
@@ -193,18 +193,32 @@ function ExpenseList({ expenses = [], categories = [], onDelete }) {
                       <td className="expense-date">{formatDate(exp.date)}</td>
                       <td className="expense-amount">{formatCurrency(exp.amount)}</td>
                       <td style={{ textAlign: 'center' }}>
-                        <button
-                          className="btn btn-danger btn-icon"
-                          onClick={() => handleDelete(exp.id)}
-                          disabled={deletingId === exp.id}
-                          title="Delete expense"
-                        >
-                          {deletingId === exp.id ? (
-                            <span className="spinner" style={{ width: 14, height: 14 }} />
-                          ) : (
-                            '🗑️'
+                        <div style={{ display: 'inline-flex', gap: '6px', alignItems: 'center' }}>
+                          {onEdit && (
+                            <button
+                              className="btn btn-outline btn-icon"
+                              onClick={() => onEdit(exp)}
+                              disabled={deletingId === exp.id}
+                              title="Edit expense"
+                              style={{ width: 32, height: 32, padding: 0 }}
+                            >
+                              ✏️
+                            </button>
                           )}
-                        </button>
+                          <button
+                            className="btn btn-danger btn-icon"
+                            onClick={() => handleDelete(exp.id)}
+                            disabled={deletingId === exp.id}
+                            title="Delete expense"
+                            style={{ width: 32, height: 32, padding: 0 }}
+                          >
+                            {deletingId === exp.id ? (
+                              <span className="spinner" style={{ width: 14, height: 14 }} />
+                            ) : (
+                              '🗑️'
+                            )}
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   );
@@ -245,17 +259,30 @@ function ExpenseList({ expenses = [], categories = [], onDelete }) {
                   </div>
                   <div className="expense-card-right">
                     <div className="expense-amount">{formatCurrency(exp.amount)}</div>
-                    <button
-                      className="btn btn-danger btn-icon btn-sm"
-                      onClick={() => handleDelete(exp.id)}
-                      disabled={deletingId === exp.id}
-                    >
-                      {deletingId === exp.id ? (
-                        <span className="spinner" style={{ width: 12, height: 12 }} />
-                      ) : (
-                        '🗑️'
+                    <div style={{ display: 'flex', gap: '6px' }}>
+                      {onEdit && (
+                        <button
+                          className="btn btn-outline btn-icon btn-sm"
+                          onClick={() => onEdit(exp)}
+                          disabled={deletingId === exp.id}
+                          title="Edit expense"
+                        >
+                          ✏️
+                        </button>
                       )}
-                    </button>
+                      <button
+                        className="btn btn-danger btn-icon btn-sm"
+                        onClick={() => handleDelete(exp.id)}
+                        disabled={deletingId === exp.id}
+                        title="Delete expense"
+                      >
+                        {deletingId === exp.id ? (
+                          <span className="spinner" style={{ width: 12, height: 12 }} />
+                        ) : (
+                          '🗑️'
+                        )}
+                      </button>
+                    </div>
                   </div>
                 </div>
               );
