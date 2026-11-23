@@ -483,7 +483,7 @@ function DashboardPage() {
 
     const data = [];
     let runningSum = 0;
-    
+
     for (let day = 1; day <= totalDays; day++) {
       if (day <= currentDay) {
         runningSum += dayTotals[day];
@@ -733,7 +733,7 @@ function DashboardPage() {
                 <p className="section-subtitle">Set monthly targets per category and track progress</p>
               </div>
             </div>
-            
+
             <div className="budget-list">
               {loadingBudgets ? (
                 <div className="spinner-container"><div className="spinner" /></div>
@@ -749,8 +749,8 @@ function DashboardPage() {
                       <span className="budget-amount">{formatCurrency(b.currentSpending)} / {formatCurrency(b.amount)}</span>
                     </div>
                     <div className="budget-progress-bar-container">
-                      <div 
-                        className={`budget-progress-bar ${b.progressPercentage >= 100 ? 'danger' : b.progressPercentage >= 80 ? 'warning' : 'success'}`} 
+                      <div
+                        className={`budget-progress-bar ${b.progressPercentage >= 100 ? 'danger' : b.progressPercentage >= 80 ? 'warning' : 'success'}`}
                         style={{ width: `${Math.min(b.progressPercentage, 100)}%` }}
                       />
                     </div>
@@ -770,13 +770,13 @@ function DashboardPage() {
                   <option value="">Overall Monthly Limit</option>
                   {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                 </select>
-                <input 
-                  className="input" 
-                  type="number" 
-                  placeholder="Target (₹)..." 
-                  value={budgetAmount} 
-                  onChange={e => setBudgetAmount(e.target.value)} 
-                  min="1" 
+                <input
+                  className="input"
+                  type="number"
+                  placeholder="Target (₹)..."
+                  value={budgetAmount}
+                  onChange={e => setBudgetAmount(e.target.value)}
+                  min="1"
                   style={{ flex: 1, minWidth: 100 }}
                   required
                 />
@@ -814,11 +814,11 @@ function DashboardPage() {
                     <div className="rec-dates">
                       <span>Next due: {new Date(r.nextDueDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
                       <div className="toggle-switch" title="Toggle active/inactive state">
-                        <input 
-                          type="checkbox" 
-                          id={`toggle-${r.id}`} 
-                          checked={r.active} 
-                          onChange={() => handleToggleRecurring(r.id)} 
+                        <input
+                          type="checkbox"
+                          id={`toggle-${r.id}`}
+                          checked={r.active}
+                          onChange={() => handleToggleRecurring(r.id)}
                         />
                         <label htmlFor={`toggle-${r.id}`} />
                       </div>
@@ -836,22 +836,22 @@ function DashboardPage() {
 
             <form onSubmit={handleCreateRecurring} className="recurring-form">
               <h4 className="add-category-title">Schedule Recurring Transaction</h4>
-              <input 
-                className="input" 
-                placeholder="Schedule Title (e.g. Rent, Gym)..." 
-                value={recTitle} 
-                onChange={e => setRecTitle(e.target.value)} 
-                required 
+              <input
+                className="input"
+                placeholder="Schedule Title (e.g. Rent, Gym)..."
+                value={recTitle}
+                onChange={e => setRecTitle(e.target.value)}
+                required
               />
               <div className="form-row" style={{ gridTemplateColumns: '1.2fr 1fr', gap: 10, margin: '4px 0' }}>
-                <input 
-                  className="input" 
-                  type="number" 
-                  placeholder="Amount (₹)..." 
-                  value={recAmount} 
-                  onChange={e => setRecAmount(e.target.value)} 
-                  min="1" 
-                  required 
+                <input
+                  className="input"
+                  type="number"
+                  placeholder="Amount (₹)..."
+                  value={recAmount}
+                  onChange={e => setRecAmount(e.target.value)}
+                  min="1"
+                  required
                 />
                 <select className="input" value={recFrequency} onChange={e => setRecFrequency(e.target.value)}>
                   <option value="DAILY">Daily</option>
@@ -861,12 +861,12 @@ function DashboardPage() {
                 </select>
               </div>
               <div className="form-row" style={{ gridTemplateColumns: '1.2fr 1fr', gap: 10, margin: '4px 0' }}>
-                <input 
-                  className="input" 
-                  type="date" 
-                  value={recStartDate} 
-                  onChange={e => setRecStartDate(e.target.value)} 
-                  required 
+                <input
+                  className="input"
+                  type="date"
+                  value={recStartDate}
+                  onChange={e => setRecStartDate(e.target.value)}
+                  required
                   style={{ colorScheme: 'dark' }}
                 />
                 <select className="input" value={recCatId} onChange={e => setRecCatId(e.target.value)}>
@@ -874,11 +874,11 @@ function DashboardPage() {
                   {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                 </select>
               </div>
-              <input 
-                className="input" 
-                placeholder="Description (optional)..." 
-                value={recDescription} 
-                onChange={e => setRecDescription(e.target.value)} 
+              <input
+                className="input"
+                placeholder="Description (optional)..."
+                value={recDescription}
+                onChange={e => setRecDescription(e.target.value)}
               />
               <button type="submit" className="btn" style={{ width: '100%', marginTop: 4 }} disabled={creatingRecurring}>
                 {creatingRecurring ? 'Creating Schedule...' : 'Schedule Automatic Billing'}
@@ -1056,12 +1056,7 @@ function DashboardPage() {
         <ExpenseForm
           categories={categories}
           initialData={editingExpense}
-          onAdd={() => {
-            fetchExpenses();
-            fetchSummary();
-            fetchBudgets();
-            fetchInsights();
-          }}
+          onAdd={handleAddExpense}
           onRefreshCategories={fetchCategories}
           onClose={() => {
             setShowExpenseForm(false);

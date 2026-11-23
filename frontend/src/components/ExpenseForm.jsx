@@ -226,7 +226,7 @@ function ExpenseForm({ categories, initialData = null, onAdd, onRefreshCategorie
                   value={form.categoryId}
                   onChange={handleChange}
                 >
-                  <option value="">Select category...</option>
+                  <option value="">(Uncategorized)</option>
                   {categories.map((cat) => (
                     <option key={cat.id} value={cat.id}>
                       {cat.name}
