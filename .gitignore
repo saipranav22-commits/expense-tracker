@@ -37,3 +37,9 @@ yarn-error.log*
 node_modules/
 dist/
 build/
+
+# Media binaries
+*.mp4
+*.avi
+*.mov
+docs/demo/temp/
